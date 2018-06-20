@@ -27,8 +27,6 @@ var bm_max = Math.max;
 var bm_min = Math.min;
 var blitter = 10;
 
-var global_id = 0;
-
 var BMMath = {};
 (function(){
     var propertyNames = Object.getOwnPropertyNames(Math);
@@ -6362,6 +6360,9 @@ function SVGBaseElement(data,parentContainer,globalData,comp, placeholder){
     this.placeholder = placeholder;
     this._sizeChanged = false;
     this.init();
+
+    
+    window.registerEditSymbol && window.registerEditSymbol(this);
 };
 
 createElement(BaseElement, SVGBaseElement);
@@ -6856,7 +6857,6 @@ IShapeElement.prototype.createStyleElement = function(data, level, dynamicProper
         pathElement.setAttribute('fill-rule', 'evenodd');
     }
 
-    data.ln = data.ln || 'symbol_' + (global_id++);
     if(data.ln){
         pathElement.setAttribute('id',data.ln);
     }
@@ -6877,7 +6877,6 @@ IShapeElement.prototype.createGroupElement = function(data) {
     var g = document.createElementNS(svgNS,'g');
     elementData.gr = g;
 
-    data.ln = data.ln || 'symbol_' + (global_id++);
     if(data.ln){
         elementData.gr.setAttribute('id',data.ln);
     }
@@ -7413,7 +7412,6 @@ SVGTextElement.prototype.createElements = function(){
 
     this._parent.createElements.call(this);
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.layerElement.setAttribute('id',this.data.ln);
     }
@@ -7477,6 +7475,7 @@ SVGTextElement.prototype.buildNewText = function(){
         }
         tElement.setAttribute('text-anchor',justify);
         tElement.setAttribute('letter-spacing',trackingOffset);
+            
         var textContent = documentData.t.split(String.fromCharCode(13));
         len = textContent.length;
         var yPos = documentData.ps ? documentData.ps[1] + documentData.ascent : 0;
@@ -8221,14 +8220,12 @@ IImageElement.prototype.createElements = function(){
     this.innerElem.setAttributeNS('http://www.w3.org/1999/xlink','href',assetPath);
     this.maskedElement = this.innerElem;
     this.layerElement.appendChild(this.innerElem);
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.layerElement.setAttribute('id',this.data.ln);
     }
     if(this.data.cl){
         this.layerElement.setAttribute('class',this.data.cl);
     }
-
 };
 
 IImageElement.prototype.renderFrame = function(parentMatrix){
@@ -8267,7 +8264,6 @@ ISolidElement.prototype.createElements = function(){
     this.layerElement.appendChild(rect);
     this.innerElem = rect;
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.layerElement.setAttribute('id',this.data.ln);
     }
@@ -10969,7 +10965,6 @@ HBaseElement.prototype.createElements = function(){
     }
     this.transformedElement = this.layerElement;
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln && (this.data.ty === 4 || this.data.ty === 0)){
         if(this.layerElement === this.parentContainer){
             this.layerElement = document.createElementNS(svgNS,'g');
@@ -11095,7 +11090,6 @@ HSolidElement.prototype.createElements = function(){
     this.baseElement = parent;
     this.innerElem = parent;
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.innerElem.setAttribute('id',this.data.ln);
     }
@@ -11144,7 +11138,6 @@ HCompElement.prototype.createElements = function(){
     var divElement = document.createElement('div');
     styleDiv(divElement);
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         divElement.setAttribute('id',this.data.ln);
     }
@@ -11259,7 +11252,6 @@ HShapeElement.prototype.createElements = function(){
     }
     this.innerElem = parent;
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.innerElem.setAttribute('id',this.data.ln);
     }
@@ -11616,7 +11608,6 @@ HImageElement.prototype.createElements = function(){
     }
     img.src = assetPath;
 
-    this.data.ln = this.data.ln || 'symbol_' + (global_id++);
     if(this.data.ln){
         this.innerElem.setAttribute('id',this.data.ln);
     }
